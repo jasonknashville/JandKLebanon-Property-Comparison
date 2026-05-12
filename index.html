@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anderson Family | 1149 Fairways vs 2000 Hedgelawn | Jason Kaczmarski Team</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --red: #d81f26;
+  --blue: #1f4fa3;
+  --blue-dark: #163d82;
+  --blue-mid: #2d57a5;
+  --blue-light: #eef3ff;
+  --gold: #f0b429;
+  --gold-light: #fef9ec;
+  --green: #15803d;
+  --green-light: #f0fdf4;
+  --text: #1a1a2e;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --bg: #f7f8fc;
+  --white: #ffffff;
+  --fw-color: #1f4fa3;
+  --ro-color: #d81f26;
+}
+
+body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+.header {
+  background: var(--red);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.header img { max-width: 200px; }
+
+.tool-nav {
+  background: #12263f;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  padding: 0 20px;
+}
+.tool-nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 42px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tool-nav-inner::-webkit-scrollbar { display: none; }
+.tool-nav-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #f0b429;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.tool-nav-home svg { width: 13px; height: 13px; }
+.tool-nav-divider { color: rgba(255,255,255,.2); padding: 0 4px; font-size: 14px; }
+.tool-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255,255,255,.6);
+  font-size: 12px;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.tool-nav-link.active { color: white; font-weight: 600; }
+
+.hero {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+  color: white;
+  padding: 52px 20px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+.hero-eyebrow {
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  opacity: .7;
+  margin-bottom: 12px;
+  position: relative;
+}
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(26px, 4.5vw, 46px);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 10px;
+  position: relative;
+}
+.hero h1 em { font-style: italic; color: var(--gold); }
+.hero-sub {
+  font-size: 15px;
+  opacity: .8;
+  max-width: 580px;
+  margin: 0 auto 20px;
+  line-height: 1.6;
+  position: relative;
+}
+.prop-tags {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+}
+.prop-tag {
+  border-radius: 99px;
+  padding: 7px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+.prop-tag.fw { background: rgba(31,79,163,0.35); border: 2px solid rgba(100,149,237,0.6); }
+.prop-tag.ro { background: rgba(216,31,38,0.35); border: 2px solid rgba(216,31,38,0.6); }
+
+/* STAT STRIP */
+.stat-strip {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+}
+.stat-strip-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.stat-item {
+  padding: 22px 20px;
+  border-right: 1px solid var(--border);
+  text-align: center;
+}
+.stat-item:last-child { border-right: none; }
+.stat-label { font-size: 10px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.stat-value { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+.stat-value.fw { color: var(--fw-color); }
+.stat-value.ro { color: var(--ro-color); }
+.stat-note { font-size: 11px; color: var(--muted); }
+
+/* CONTEXT BANNER */
+.context-banner { max-width: 1100px; margin: 28px auto 0; padding: 0 20px; }
+.context-inner {
+  background: var(--white);
+  border-radius: 12px;
+  padding: 18px 24px;
+  border-left: 4px solid var(--gold);
+  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+.context-inner strong { color: var(--text); }
+
+/* MAIN */
+.main { max-width: 1100px; margin: 24px auto 60px; padding: 0 20px; display: flex; flex-direction: column; gap: 32px; }
+
+/* CARD */
+.card { background: var(--white); border-radius: 16px; box-shadow: 0 2px 20px rgba(0,0,0,.07); overflow: hidden; }
+.card-header { padding: 22px 28px 0; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+.card-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--text); }
+.card-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.chart-wrap { padding: 20px 28px 24px; }
+
+/* CHART LEGEND */
+.legend-row { display: flex; gap: 20px; flex-wrap: wrap; padding: 0 28px 4px; }
+.legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+.legend-dot.fw { background: var(--fw-color); }
+.legend-dot.ro { background: var(--ro-color); }
+
+/* TABS */
+.tab-bar { display: flex; padding: 0 28px; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn {
+  padding: 12px 18px; font-size: 13px; font-weight: 600; color: var(--muted);
+  border: none; background: none; cursor: pointer; border-bottom: 2px solid transparent;
+  white-space: nowrap; transition: color .15s, border-color .15s; font-family: 'DM Sans', sans-serif;
+}
+.tab-btn:hover { color: var(--blue); }
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* SIDE BY SIDE COMPARE */
+.compare-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+}
+.compare-half {
+  padding: 24px 28px;
+}
+.compare-half:first-child { border-right: 1px solid var(--border); }
+.compare-half-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 14px;
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot.fw { background: var(--fw-color); }
+.dot.ro { background: var(--ro-color); }
+.compare-half-label.fw { color: var(--fw-color); }
+.compare-half-label.ro { color: var(--ro-color); }
+
+.stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.mini-stat { background: var(--bg); border-radius: 8px; padding: 12px 14px; border: 1px solid var(--border); }
+.mini-stat .ms-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 4px; }
+.mini-stat .ms-val { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; line-height: 1; }
+.mini-stat .ms-val.fw { color: var(--fw-color); }
+.mini-stat .ms-val.ro { color: var(--ro-color); }
+.mini-stat .ms-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* YEAR SECTION */
+.slider-section { background: var(--white); border-radius: 16px; box-shadow: 0 2px 20px rgba(0,0,0,.07); overflow: hidden; }
+.slider-header { padding: 22px 28px 16px; border-bottom: 1px solid var(--border); }
+.slider-header h2 { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; }
+.slider-header p { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+.year-tabs { display: flex; border-bottom: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+.year-tabs::-webkit-scrollbar { display: none; }
+.year-tab {
+  padding: 12px 20px; font-size: 14px; font-weight: 600; color: var(--muted);
+  border: none; background: none; cursor: pointer; border-bottom: 3px solid transparent;
+  white-space: nowrap; transition: all .2s; font-family: 'DM Sans', sans-serif;
+}
+.year-tab:hover { color: var(--blue); background: var(--blue-light); }
+.year-tab.active { color: var(--blue); border-bottom-color: var(--blue); background: var(--blue-light); }
+.year-tab .badge { display: inline-block; font-size: 9px; background: var(--gold); color: var(--text); border-radius: 99px; padding: 1px 5px; margin-left: 4px; font-weight: 700; vertical-align: middle; }
+.year-tab .no-sale { display: inline-block; font-size: 9px; background: #e2e8f0; color: var(--muted); border-radius: 99px; padding: 1px 5px; margin-left: 4px; font-weight: 700; vertical-align: middle; }
+
+.year-panel { display: none; padding: 28px; animation: fadeIn .25s ease; }
+.year-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.year-split { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.year-col {}
+.year-col-label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em;
+  margin-bottom: 14px; padding-bottom: 10px; border-bottom: 2px solid;
+}
+.year-col-label.fw { color: var(--fw-color); border-color: var(--fw-color); }
+.year-col-label.ro { color: var(--ro-color); border-color: var(--ro-color); }
+
+.year-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.year-stat-box { background: var(--bg); border-radius: 10px; padding: 12px 14px; border: 1px solid var(--border); }
+.year-stat-box .ys-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 4px; }
+.year-stat-box .ys-value { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; line-height: 1; }
+.year-stat-box .ys-value.fw { color: var(--fw-color); }
+.year-stat-box .ys-value.ro { color: var(--ro-color); }
+.year-stat-box .ys-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.no-sales-box {
+  background: #f8fafc;
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 28px 20px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+.no-sales-box strong { display: block; font-size: 16px; color: var(--text); margin-bottom: 4px; }
+
+.year-context {
+  font-size: 13px; color: var(--muted); line-height: 1.7;
+  padding: 14px 16px; background: var(--gold-light); border-left: 3px solid var(--gold);
+  border-radius: 0 8px 8px 0; margin-bottom: 12px;
+}
+.year-context strong { color: var(--text); }
+
+.view-report-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  text-decoration: none; transition: opacity .2s; color: white;
+  margin-right: 8px; margin-bottom: 4px;
+}
+.view-report-btn.fw { background: var(--fw-color); }
+.view-report-btn.ro { background: var(--ro-color); }
+.view-report-btn:hover { opacity: .85; transform: translateY(-1px); }
+.view-report-btn svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+.btn-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* CURRENT MARKET */
+.current-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 24px 28px; }
+.current-card { background: var(--bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
+.current-card-title { font-size: 13px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.current-card-title.fw { color: var(--fw-color); }
+.current-card-title.ro { color: var(--ro-color); }
+.active-listing { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.active-listing:last-child { border-bottom: none; }
+.al-addr { color: var(--text); font-weight: 500; }
+.al-price { font-weight: 700; }
+.al-price.fw { color: var(--fw-color); }
+.al-price.ro { color: var(--ro-color); }
+.al-detail { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+/* SUBJECT PROPERTY HIGHLIGHT */
+.subject-card {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e8f0fe 100%);
+  border: 2px solid var(--blue-mid);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.subject-card-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--blue); margin-bottom: 12px; }
+.subject-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.ss-item .ss-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.ss-item .ss-val { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--blue); }
+
+/* CTA */
+.cta-card {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
+  color: white; border-radius: 16px; padding: 40px; text-align: center; position: relative; overflow: hidden;
+}
+.cta-card::before { content: '🏠'; position: absolute; font-size: 180px; opacity: .05; right: -30px; bottom: -40px; pointer-events: none; }
+.cta-card h2 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 900; margin-bottom: 10px; }
+.cta-card h2 em { font-style: italic; color: var(--gold); }
+.cta-card p { font-size: 15px; opacity: .85; max-width: 500px; margin: 0 auto 24px; line-height: 1.6; }
+.cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.cta-btn {
+  display: inline-block; padding: 13px 28px; border-radius: 10px; font-weight: 700;
+  font-size: 14px; text-decoration: none; transition: all .2s;
+}
+.cta-btn.primary { background: white; color: var(--blue); }
+.cta-btn.primary:hover { background: var(--gold); color: var(--text); transform: translateY(-2px); }
+.cta-btn.secondary { background: rgba(255,255,255,.15); color: white; border: 1px solid rgba(255,255,255,.3); }
+.cta-btn.secondary:hover { background: rgba(255,255,255,.25); transform: translateY(-2px); }
+.cta-sub { font-size: 12px; opacity: .6; margin-top: 14px; }
+
+/* FOOTER */
+.footer { background: var(--blue); color: white; text-align: center; padding: 18px 20px; font-size: 13px; }
+.footer a { color: var(--gold); text-decoration: none; }
+.footer .disclaimer { margin-top: 8px; font-size: 10px; opacity: .55; max-width: 700px; margin-left: auto; margin-right: auto; line-height: 1.5; }
+
+@media (max-width: 720px) {
+  .stat-strip-inner { grid-template-columns: 1fr 1fr; }
+  .stat-item:nth-child(2) { border-right: none; }
+  .compare-split { grid-template-columns: 1fr; }
+  .compare-half:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+  .year-split { grid-template-columns: 1fr; }
+  .current-grid { grid-template-columns: 1fr; }
+  .cta-card { padding: 28px 20px; }
+  .subject-stats { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <img src="https://kvcore-library.s3.amazonaws.com/remax1stchoice8207/images/03b9616f75a8e185d56a93c799829fdf.png" alt="RE/MAX 1st Choice – Jason Kaczmarski Team">
+</div>
+
+<!-- NAV -->
+<div class="tool-nav">
+  <div class="tool-nav-inner">
+    <a class="tool-nav-home" href="https://jasonknashville.github.io/Market-Reports-Hub/">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 6.5L8 2l6 4.5V14a1 1 0 01-1 1H3a1 1 0 01-1-1V6.5z"/><path d="M6 15V9h4v6"/></svg>
+      All Reports
+    </a>
+    <span class="tool-nav-divider">|</span>
+    <a class="tool-nav-link active" href="#">🏡 Anderson Family — Lebanon, TN</a>
+    <span class="tool-nav-divider">|</span>
+    <a class="tool-nav-link" href="https://go.realtracs.com/1hgEc0R" target="_blank">📍 2000 Hedgelawn Listing</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Lebanon, TN &nbsp;·&nbsp; Personalized Market Comparison for the Anderson Family</div>
+  <h1>Two Great Streets,<br><em>One Big Decision</em></h1>
+  <p class="hero-sub">A side-by-side market history of the Fairways subdivision and River Oaks subdivision — so you can see exactly how each neighborhood has performed, year by year.</p>
+  <div class="prop-tags">
+    <span class="prop-tag fw">🏠 1149 Fairways Dr — Fairways</span>
+    <span class="prop-tag ro">📍 2000 Hedgelawn Dr — River Oaks</span>
+  </div>
+</div>
+
+<!-- STAT STRIP -->
+<div class="stat-strip">
+  <div class="stat-strip-inner">
+    <div class="stat-item">
+      <div class="stat-label">Fairways · 2024 Median Price</div>
+      <div class="stat-value fw">$495,000</div>
+      <div class="stat-note">3 sales · Median DOM: 53 days</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">River Oaks · 2024 Median Price</div>
+      <div class="stat-value ro">$677,450</div>
+      <div class="stat-note">16 sales · Median DOM: 21 days</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Fairways · Price Growth 2020–2024</div>
+      <div class="stat-value fw">+57%</div>
+      <div class="stat-note">$306K → $495K median</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">River Oaks · Price Growth 2020–2024</div>
+      <div class="stat-value ro">+60%</div>
+      <div class="stat-note">$423K → $677K median</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTEXT BANNER -->
+<div class="context-banner">
+  <div class="context-inner">
+    <strong>About this comparison:</strong> Both neighborhoods are in Lebanon, TN. <strong>Fairways</strong> is an established subdivision on Fairways Dr with a smaller, tighter inventory — some years see only 3–5 sales, and 2023 and 2025 had <em>zero</em> recorded sales, which tells its own story about how rarely these homes change hands. <strong>River Oaks</strong> is a larger, actively developing community with consistent yearly volume and a broad price range as new phases deliver. Both neighborhoods offer strong fundamentals, but they serve different buyer profiles.
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- CHART CARD -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Median Sale Price — Side by Side</div>
+        <div class="card-subtitle">Fairways vs. River Oaks · Lebanon, TN · 2020–2025</div>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchChart('price', event)">Median Sale Price</button>
+      <button class="tab-btn" onclick="switchChart('ppsf', event)">Avg Price Per SF</button>
+      <button class="tab-btn" onclick="switchChart('dom', event)">Days on Market</button>
+      <button class="tab-btn" onclick="switchChart('volume', event)">Sales Volume</button>
+    </div>
+    <div class="legend-row" style="padding: 14px 28px 0;">
+      <div class="legend-item"><div class="legend-dot fw"></div>Fairways</div>
+      <div class="legend-item"><div class="legend-dot ro"></div>River Oaks</div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="mainChart" height="300"></canvas>
+    </div>
+    <p style="padding: 0 28px 18px; font-size: 11px; color: var(--muted);">* Fairways had no sales in 2023 or 2025, so those data points are omitted from Fairways lines. River Oaks 2025 reflects 3 sales only.</p>
+  </div>
+
+  <!-- CURRENT MARKET -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Current Market Snapshot</div>
+        <div class="card-subtitle">Active listings & recent closings — Last 6 months</div>
+      </div>
+    </div>
+    <div class="current-grid">
+      <!-- Fairways Current -->
+      <div class="current-card">
+        <div class="current-card-title fw">
+          <div class="dot fw"></div>
+          Fairways — Active & Recent
+        </div>
+
+        <!-- Subject Property Highlight -->
+        <div class="subject-card" style="border-color: var(--fw-color); background: linear-gradient(135deg,#eef3ff,#dbeafe);">
+          <div class="subject-card-title" style="color:var(--fw-color);">📍 Subject Property</div>
+          <div style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px;">1149 Fairways Dr</div>
+          <div class="subject-stats">
+            <div class="ss-item"><div class="ss-label">Built</div><div class="ss-val" style="color:var(--fw-color);">2001</div></div>
+            <div class="ss-item"><div class="ss-label">SqFt</div><div class="ss-val" style="color:var(--fw-color);">2,801</div></div>
+            <div class="ss-item"><div class="ss-label">Beds/Bath</div><div class="ss-val" style="color:var(--fw-color); font-size:16px;">3 / 2.5</div></div>
+          </div>
+          <div style="margin-top:12px; font-size:12px; color:var(--muted);">Last sold Dec 2021 for <strong style="color:var(--fw-color);">$475,000</strong> ($169.58/sf)</div>
+        </div>
+
+        <div style="font-size:12px; color:var(--muted); margin-bottom:10px; font-weight:600; text-transform:uppercase; letter-spacing:.06em;">Last 6 Months Activity (subdivision-wide)</div>
+        <div class="active-listing">
+          <div><div class="al-addr">CMA Report (6 mo)</div><div class="al-detail">All Fairways active & closed</div></div>
+          <a href="https://go.realtracs.com/1hfe12c" target="_blank" class="view-report-btn fw" style="font-size:11px; padding:6px 12px;">View CMA</a>
+        </div>
+        <div class="active-listing">
+          <div><div class="al-addr">Buyer Resource</div><div class="al-detail">Full buyer report — Fairways</div></div>
+          <a href="https://go.realtracs.com/1hfe655" target="_blank" class="view-report-btn fw" style="font-size:11px; padding:6px 12px;">Buyer Report</a>
+        </div>
+        <div style="margin-top:14px; padding:12px 14px; background:#fef9ec; border-radius:8px; font-size:13px; color:var(--muted); border-left:3px solid var(--gold);">
+          <strong style="color:var(--text);">No sales recorded in 2025 or 2023.</strong> Fairways is a small, tightly held neighborhood. When homes do come available, they tend to attract serious buyers quickly.
+        </div>
+      </div>
+
+      <!-- River Oaks Current -->
+      <div class="current-card">
+        <div class="current-card-title ro">
+          <div class="dot ro"></div>
+          River Oaks — Active & Recent Closings
+        </div>
+
+        <div class="subject-card" style="border-color: var(--ro-color); background: linear-gradient(135deg,#fff1f2,#ffe4e6);">
+          <div class="subject-card-title" style="color:var(--ro-color);">📍 Subject Property</div>
+          <div style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:10px;">2000 Hedgelawn Dr</div>
+          <div class="subject-stats">
+            <div class="ss-item"><div class="ss-label">Built</div><div class="ss-val" style="color:var(--ro-color);">2018</div></div>
+            <div class="ss-item"><div class="ss-label">SqFt</div><div class="ss-val" style="color:var(--ro-color);">2,399</div></div>
+            <div class="ss-item"><div class="ss-label">Status</div><div class="ss-val" style="color:var(--ro-color); font-size:14px;">Active</div></div>
+          </div>
+          <div style="margin-top:12px; font-size:12px; color:var(--muted);">Listed at <strong style="color:var(--ro-color);">$540,000</strong> ($225/sf) · DOM: 4 days</div>
+          <div style="margin-top:8px;"><a href="https://go.realtracs.com/1hgEc0R" target="_blank" class="view-report-btn ro" style="font-size:11px; padding:6px 12px;">View Original Listing</a></div>
+        </div>
+
+        <div style="font-size:12px; color:var(--muted); margin-bottom:8px; font-weight:600; text-transform:uppercase; letter-spacing:.06em;">Recent Closed Sales (last 6 months)</div>
+        <div class="active-listing">
+          <div><div class="al-addr">2008 Hedgelawn Dr</div><div class="al-detail">4br · 2,841sf · DOM 41</div></div>
+          <div><div class="al-price ro">$545,000</div><div class="al-detail">$191.83/sf · Closed 3/31/26</div></div>
+        </div>
+        <div class="active-listing">
+          <div><div class="al-addr">1063 River Oaks Blvd</div><div class="al-detail">4br · 2,774sf · DOM 159</div></div>
+          <div><div class="al-price ro">$594,000</div><div class="al-detail">$214.13/sf · Closed 2/19/26</div></div>
+        </div>
+        <div class="active-listing">
+          <div><div class="al-addr">1107 River Oaks Blvd</div><div class="al-detail">4br · 3,048sf · DOM 0</div></div>
+          <div><div class="al-price ro">$719,000</div><div class="al-detail">$235.89/sf · Closed 3/27/26</div></div>
+        </div>
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;">
+          <a href="https://go.realtracs.com/1hfbZDA" target="_blank" class="view-report-btn ro" style="font-size:11px; padding:6px 12px;">6-Month CMA</a>
+          <a href="https://go.realtracs.com/1hfcq0k" target="_blank" class="view-report-btn ro" style="font-size:11px; padding:6px 12px;">Buyer Report</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- YEAR BY YEAR -->
+  <div class="slider-section">
+    <div class="slider-header">
+      <h2>Year-by-Year Breakdown</h2>
+      <p>Fairways vs. River Oaks · Both neighborhoods compared annually · Select a year below</p>
+    </div>
+
+    <div class="year-tabs">
+      <button class="year-tab" onclick="showYear('2020', event)">2020</button>
+      <button class="year-tab" onclick="showYear('2021', event)">2021</button>
+      <button class="year-tab" onclick="showYear('2022', event)">2022</button>
+      <button class="year-tab" onclick="showYear('2023', event)">2023</button>
+      <button class="year-tab active" onclick="showYear('2024', event)">2024</button>
+      <button class="year-tab" onclick="showYear('2025', event)">2025</button>
+      <button class="year-tab" onclick="showYear('6mo', event)">6-Month <span class="badge">NOW</span></button>
+    </div>
+
+    <!-- 2020 -->
+    <div class="year-panel" id="panel-2020">
+      <div class="year-split">
+        <div class="year-col">
+          <div class="year-col-label fw"><div class="dot fw"></div>Fairways — 2020</div>
+          <div class="year-stats">
+            <div class="year-stat-box"><div class="ys-label">Sales Count</div><div class="ys-value fw">3</div><div class="ys-sub">Closed transactions</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Sale Price</div><div class="ys-value fw">$315,333</div><div class="ys-sub">3 sales</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median Sale Price</div><div class="ys-value fw">$306,000</div><div class="ys-sub">Range: $300K–$340K</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Price / SF</div><div class="ys-value fw">$125</div><div class="ys-sub">Avg DOM: 83 days</div></div>
+          </div>
+          <div class="year-context">
+            <strong>Fairways 2020:</strong> A quiet year with just 3 sales. Price per square foot averaged $125 — a strong baseline for a well-established neighborhood. The 83-day average DOM reflects the smaller buyer pool for this price tier at the time.
+          </div>
+          <div class="btn-row">
+            <a href="https://go.realtracs.com/1hgEQBR" target="_blank" class="view-report-btn fw">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L6 8l3 3 5-6"/><rect x="1" y="1" width="14" height="14" rx="2"/></svg>
+              Fairways 2020 CMA
+            </a>
+          </div>
+        </div>
+        <div class="year-col">
+          <div class="year-col-label ro"><div class="dot ro"></div>River Oaks — 2020</div>
+          <div class="year-stats">
+            <div class="year-stat-box"><div class="ys-label">Sales Count</div><div class="ys-value ro">31</div><div class="ys-sub">Closed transactions</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Sale Price</div><div class="ys-value ro">$427,136</div><div class="ys-sub">31 sales</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median Sale Price</div><div class="ys-value ro">$422,807</div><div class="ys-sub">Range: $320K–$556K</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Price / SF</div><div class="ys-value ro">$166</div><div class="ys-sub">Avg DOM: 21 days</div></div>
+          </div>
+          <div class="year-context">
+            <strong>River Oaks 2020:</strong> 31 sales as the community was actively delivering new construction. Strong volume and a 21-day average DOM reflect robust demand. Prices ranged broadly as multiple phases and product types came to market.
+          </div>
+          <div class="btn-row">
+            <a href="https://go.realtracs.com/1hfdn3O" target="_blank" class="view-report-btn ro">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L6 8l3 3 5-6"/><rect x="1" y="1" width="14" height="14" rx="2"/></svg>
+              River Oaks 2020 CMA
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2021 -->
+    <div class="year-panel" id="panel-2021">
+      <div class="year-split">
+        <div class="year-col">
+          <div class="year-col-label fw"><div class="dot fw"></div>Fairways — 2021</div>
+          <div class="year-stats">
+            <div class="year-stat-box"><div class="ys-label">Sales Count</div><div class="ys-value fw">4</div><div class="ys-sub">Closed transactions</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Sale Price</div><div class="ys-value fw">$448,725</div><div class="ys-sub">4 sales</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median Sale Price</div><div class="ys-value fw">$447,500</div><div class="ys-sub">Range: $400K–$500K</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Price / SF</div><div class="ys-value fw">$156</div><div class="ys-sub">Avg DOM: 23 days</div></div>
+          </div>
+          <div class="year-context">
+            <strong>Fairways 2021:</strong> Prices jumped ~46% from 2020 — the most dramatic single-year gain on record for this street. The median hit $447,500 and DOM dropped to 23 days as pandemic-era demand hit every corner of the Lebanon market. <strong>1149 Fairways Dr sold in this year for $475,000</strong> ($169.58/sf) in December.
+          </div>
+          <div class="btn-row">
+            <a href="https://go.realtracs.com/1hgEN0j" target="_blank" class="view-report-btn fw">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L6 8l3 3 5-6"/><rect x="1" y="1" width="14" height="14" rx="2"/></svg>
+              Fairways 2021 CMA
+            </a>
+          </div>
+        </div>
+        <div class="year-col">
+          <div class="year-col-label ro"><div class="dot ro"></div>River Oaks — 2021</div>
+          <div class="year-stats">
+            <div class="year-stat-box"><div class="ys-label">Sales Count</div><div class="ys-value ro">62</div><div class="ys-sub">Highest year on record</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Sale Price</div><div class="ys-value ro">$461,066</div><div class="ys-sub">62 sales</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median Sale Price</div><div class="ys-value ro">$443,915</div><div class="ys-sub">Range: $336K–$640K</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Price / SF</div><div class="ys-value ro">$178</div><div class="ys-sub">Avg DOM: 13 days</div></div>
+          </div>
+          <div class="year-context">
+            <strong>River Oaks 2021:</strong> The busiest year ever — 62 closings, 13-day average DOM, and prices up ~5% from 2020. The volume surge was driven by continuing new construction deliveries across multiple phases. Competition was fierce for resale homes.
+          </div>
+          <div class="btn-row">
+            <a href="https://go.realtracs.com/1hfdi1Y" target="_blank" class="view-report-btn ro">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L6 8l3 3 5-6"/><rect x="1" y="1" width="14" height="14" rx="2"/></svg>
+              River Oaks 2021 CMA
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2022 -->
+    <div class="year-panel" id="panel-2022">
+      <div class="year-split">
+        <div class="year-col">
+          <div class="year-col-label fw"><div class="dot fw"></div>Fairways — 2022</div>
+          <div class="year-stats">
+            <div class="year-stat-box"><div class="ys-label">Sales Count</div><div class="ys-value fw">5</div><div class="ys-sub">Closed transactions</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Sale Price</div><div class="ys-value fw">$519,740</div><div class="ys-sub">5 sales</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median Sale Price</div><div class="ys-value fw">$499,900</div><div class="ys-sub">Range: $490K–$600K</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Price / SF</div><div class="ys-value fw">$204</div><div class="ys-sub">Avg DOM: 28 days</div></div>
+          </div>
+          <div class="year-context">
+            <strong>Fairways 2022:</strong> Despite rising rates, Fairways hit its highest median ever at $499,900 — up 12% from 2021. New construction on the street (two 2022-built homes) helped set new price ceilings. The busiest year in the dataset with 5 closings.
+          </div>
+          <div class="btn-row">
+            <a href="https://go.realtracs.com/1hgEL4a" target="_blank" class="view-report-btn fw">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L6 8l3 3 5-6"/><rect x="1" y="1" width="14" height="14" rx="2"/></svg>
+              Fairways 2022 CMA
+            </a>
+          </div>
+        </div>
+        <div class="year-col">
+          <div class="year-col-label ro"><div class="dot ro"></div>River Oaks — 2022</div>
+          <div class="year-stats">
+            <div class="year-stat-box"><div class="ys-label">Sales Count</div><div class="ys-value ro">15</div><div class="ys-sub">Closed transactions</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Sale Price</div><div class="ys-value ro">$507,480</div><div class="ys-sub">15 sales</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median Sale Price</div><div class="ys-value ro">$555,780</div><div class="ys-sub">Range: $295K–$695K</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Price / SF</div><div class="ys-value ro">$225</div><div class="ys-sub">Avg DOM: 8 days</div></div>
+          </div>
+          <div class="year-context">
+            <strong>River Oaks 2022:</strong> Volume dropped 76% as rate shock hit — but prices didn't flinch. Median jumped to $555,780 as new phase deliveries brought larger, higher-priced homes to market. Just 8 days average DOM tells you demand stayed real even as volume thinned.
+          </div>
+          <div class="btn-row">
+            <a href="https://go.realtracs.com/1hfdZBi" target="_blank" class="view-report-btn ro">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L6 8l3 3 5-6"/><rect x="1" y="1" width="14" height="14" rx="2"/></svg>
+              River Oaks 2022 CMA
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2023 -->
+    <div class="year-panel" id="panel-2023">
+      <div class="year-split">
+        <div class="year-col">
+          <div class="year-col-label fw"><div class="dot fw"></div>Fairways — 2023</div>
+          <div class="no-sales-box">
+            <strong>No Recorded Sales in 2023</strong>
+            Zero transactions closed on Fairways Dr in 2023. This isn't unusual for a small street — it means owners held tight. No data distortion, just a very tightly held inventory.
+          </div>
+          <div class="year-context">
+            <strong>What this means:</strong> In a market where most neighborhoods saw volume declines, Fairways simply had no sellers. The homes that exist here tend to be long-term holds. When one does come available, it's a meaningful event.
+          </div>
+        </div>
+        <div class="year-col">
+          <div class="year-col-label ro"><div class="dot ro"></div>River Oaks — 2023</div>
+          <div class="year-stats">
+            <div class="year-stat-box"><div class="ys-label">Sales Count</div><div class="ys-value ro">44</div><div class="ys-sub">Closed transactions</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Sale Price</div><div class="ys-value ro">$598,268</div><div class="ys-sub">44 sales</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median Sale Price</div><div class="ys-value ro">$579,263</div><div class="ys-sub">Range: $473K–$752K</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Price / SF</div><div class="ys-value ro">$222</div><div class="ys-sub">Avg DOM: 12 days</div></div>
+          </div>
+          <div class="year-context">
+            <strong>River Oaks 2023:</strong> Volume recovered to 44 sales as new Birmingham Rd phase homes delivered at $640–$752K. Median price rose to $579,263 — up 4% from 2022. The 12-day average DOM shows the community remained competitive all year.
+          </div>
+          <div class="btn-row">
+            <a href="https://go.realtracs.com/1hfdT1I" target="_blank" class="view-report-btn ro">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L6 8l3 3 5-6"/><rect x="1" y="1" width="14" height="14" rx="2"/></svg>
+              River Oaks 2023 CMA
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2024 -->
+    <div class="year-panel active" id="panel-2024">
+      <div class="year-split">
+        <div class="year-col">
+          <div class="year-col-label fw"><div class="dot fw"></div>Fairways — 2024</div>
+          <div class="year-stats">
+            <div class="year-stat-box"><div class="ys-label">Sales Count</div><div class="ys-value fw">3</div><div class="ys-sub">Closed transactions</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Sale Price</div><div class="ys-value fw">$548,333</div><div class="ys-sub">3 sales</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median Sale Price</div><div class="ys-value fw">$495,000</div><div class="ys-sub">Range: $490K–$660K</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Price / SF</div><div class="ys-value fw">$183</div><div class="ys-sub">Avg DOM: 48 days</div></div>
+          </div>
+          <div class="year-context">
+            <strong>Fairways 2024:</strong> Three sales returned after the 2023 gap. The median came in at $495,000 — essentially flat vs. 2022's $499,900. The high-end 4br/3.5ba at 1104 Fairways (4,190 sf) closed at $660,000, setting a new street record. DOM of 48 days average is longer, reflecting more price sensitivity in this rate environment.
+          </div>
+          <div class="btn-row">
+            <a href="https://go.realtracs.com/1hgEEFA" target="_blank" class="view-report-btn fw">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L6 8l3 3 5-6"/><rect x="1" y="1" width="14" height="14" rx="2"/></svg>
+              Fairways 2024 CMA
+            </a>
+          </div>
+        </div>
+        <div class="year-col">
+          <div class="year-col-label ro"><div class="dot ro"></div>River Oaks — 2024</div>
+          <div class="year-stats">
+            <div class="year-stat-box"><div class="ys-label">Sales Count</div><div class="ys-value ro">16</div><div class="ys-sub">Closed transactions</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Sale Price</div><div class="ys-value ro">$659,002</div><div class="ys-sub">16 sales</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median Sale Price</div><div class="ys-value ro">$677,450</div><div class="ys-sub">Range: $456K–$784K</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Price / SF</div><div class="ys-value ro">$223</div><div class="ys-sub">Avg DOM: 25 days</div></div>
+          </div>
+          <div class="year-context">
+            <strong>River Oaks 2024:</strong> Median jumped to $677,450 — up 17% from 2023 — driven by larger Birmingham Rd homes and strong resale demand. The 25-day average DOM and 21-day median DOM show a market that's moving well. 16 closings is solid volume for a maturing community.
+          </div>
+          <div class="btn-row">
+            <a href="https://go.realtracs.com/1hfdQE8" target="_blank" class="view-report-btn ro">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L6 8l3 3 5-6"/><rect x="1" y="1" width="14" height="14" rx="2"/></svg>
+              River Oaks 2024 CMA
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2025 -->
+    <div class="year-panel" id="panel-2025">
+      <div class="year-split">
+        <div class="year-col">
+          <div class="year-col-label fw"><div class="dot fw"></div>Fairways — 2025</div>
+          <div class="no-sales-box">
+            <strong>No Recorded Sales in 2025</strong>
+            No homes sold on Fairways Dr during 2025. As with 2023, this reflects an extremely tightly held inventory rather than a distressed market.
+          </div>
+          <div class="year-context">
+            <strong>Perspective:</strong> Two years out of five with no activity is unusual — and actually bullish for pricing power. The owners who bought here aren't leaving. For a buyer, that means limited competition when a home does appear.
+          </div>
+        </div>
+        <div class="year-col">
+          <div class="year-col-label ro"><div class="dot ro"></div>River Oaks — 2025</div>
+          <div class="year-stats">
+            <div class="year-stat-box"><div class="ys-label">Sales Count</div><div class="ys-value ro">3</div><div class="ys-sub">Full-year closings</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Sale Price</div><div class="ys-value ro">$699,900</div><div class="ys-sub">3 sales</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median Sale Price</div><div class="ys-value ro">$720,000</div><div class="ys-sub">Range: $630K–$750K</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg Price / SF</div><div class="ys-value ro">$223</div><div class="ys-sub">Avg DOM: 18 days</div></div>
+          </div>
+          <div class="year-context">
+            <strong>River Oaks 2025:</strong> A slower year with just 3 recorded sales, but prices held well — median $720,000 and only 18 days average DOM. The Birmingham Rd phase homes (3,200–3,300 sf) are defining the upper end of the market. Strong pricing discipline from sellers.
+          </div>
+          <div class="btn-row">
+            <a href="https://go.realtracs.com/1hfdH0X" target="_blank" class="view-report-btn ro">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L6 8l3 3 5-6"/><rect x="1" y="1" width="14" height="14" rx="2"/></svg>
+              River Oaks 2025 CMA
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 MONTH -->
+    <div class="year-panel" id="panel-6mo">
+      <div class="year-split">
+        <div class="year-col">
+          <div class="year-col-label fw"><div class="dot fw"></div>Fairways — Current (6 Mo)</div>
+          <div class="year-stats">
+            <div class="year-stat-box"><div class="ys-label">Active Listings</div><div class="ys-value fw">4</div><div class="ys-sub">On market now</div></div>
+            <div class="year-stat-box"><div class="ys-label">Active Median LP</div><div class="ys-value fw">$609,500</div><div class="ys-sub">Median list price</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median DOM</div><div class="ys-value fw">21</div><div class="ys-sub">Active listings</div></div>
+            <div class="year-stat-box"><div class="ys-label">Avg LP / SF</div><div class="ys-value fw">$220</div><div class="ys-sub">Active avg</div></div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div class="active-listing"><div><div class="al-addr">2000 Hedgelawn Dr</div><div class="al-detail">3br · 2,399sf · DOM 4</div></div><div><div class="al-price fw">$540,000</div><div class="al-detail">$225/sf · Active</div></div></div>
+            <div class="active-listing"><div><div class="al-addr">2015 Hedgelawn Dr</div><div class="al-detail">3br · 2,522sf · DOM 31</div></div><div><div class="al-price fw">$549,000</div><div class="al-detail">$218/sf · Active</div></div></div>
+            <div class="active-listing"><div><div class="al-addr">14 Bristol Ct</div><div class="al-detail">4br · 2,904sf · DOM 10</div></div><div><div class="al-price fw">$670,000</div><div class="al-detail">$231/sf · Active</div></div></div>
+            <div class="active-listing"><div><div class="al-addr">3006 Hedgelawn Dr</div><div class="al-detail">4br · 3,451sf · DOM 88</div></div><div><div class="al-price fw">$717,900</div><div class="al-detail">$208/sf · Active</div></div></div>
+          </div>
+          <div class="btn-row">
+            <a href="https://go.realtracs.com/1hfe12c" target="_blank" class="view-report-btn fw">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L6 8l3 3 5-6"/><rect x="1" y="1" width="14" height="14" rx="2"/></svg>
+              Fairways 6-Mo CMA
+            </a>
+            <a href="https://go.realtracs.com/1hfe655" target="_blank" class="view-report-btn fw" style="background:#2d57a5;">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+              Buyer Report
+            </a>
+          </div>
+        </div>
+        <div class="year-col">
+          <div class="year-col-label ro"><div class="dot ro"></div>River Oaks — Current (6 Mo)</div>
+          <div class="year-stats">
+            <div class="year-stat-box"><div class="ys-label">Recent Closed (3)</div><div class="ys-value ro">$619,333</div><div class="ys-sub">Avg closed price</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median Closed</div><div class="ys-value ro">$594,000</div><div class="ys-sub">3 closings</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median DOM</div><div class="ys-value ro">41</div><div class="ys-sub">Closed sales</div></div>
+            <div class="year-stat-box"><div class="ys-label">Median SP/SF</div><div class="ys-value ro">$214</div><div class="ys-sub">Closed median</div></div>
+          </div>
+          <div style="margin-bottom:12px;">
+            <div class="active-listing"><div><div class="al-addr">2008 Hedgelawn Dr</div><div class="al-detail">4br · 2,841sf · DOM 41</div></div><div><div class="al-price ro">$545,000</div><div class="al-detail">$191.83/sf · 3/31/26</div></div></div>
+            <div class="active-listing"><div><div class="al-addr">1063 River Oaks Blvd</div><div class="al-detail">4br · 2,774sf · DOM 159</div></div><div><div class="al-price ro">$594,000</div><div class="al-detail">$214.13/sf · 2/19/26</div></div></div>
+            <div class="active-listing"><div><div class="al-addr">1107 River Oaks Blvd</div><div class="al-detail">4br · 3,048sf · DOM 0</div></div><div><div class="al-price ro">$719,000</div><div class="al-detail">$235.89/sf · 3/27/26</div></div></div>
+          </div>
+          <div class="btn-row">
+            <a href="https://go.realtracs.com/1hfbZDA" target="_blank" class="view-report-btn ro">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L6 8l3 3 5-6"/><rect x="1" y="1" width="14" height="14" rx="2"/></svg>
+              River Oaks 6-Mo CMA
+            </a>
+            <a href="https://go.realtracs.com/1hfcq0k" target="_blank" class="view-report-btn ro" style="background:#b91c1c;">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1v14M1 8h14"/></svg>
+              Buyer Report
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /slider-section -->
+
+  <!-- CTA -->
+  <div class="cta-card">
+    <h2>Ready to Make Your<br><em>Move, Anderson Family?</em></h2>
+    <p>Whether 1149 Fairways or 2000 Hedgelawn is the right fit — let's walk through the numbers together and get you into the right home at the right price.</p>
+    <div class="cta-buttons">
+      <a class="cta-btn primary" href="https://the-jason-kaczmarski-team-springfield-tn.remax.com/ask/9539cc58d5c28bd9c77d6755120798e0">
+        Talk to Jason →
+      </a>
+    </div>
+    <div class="cta-sub">Free consultation &nbsp;·&nbsp; No obligation &nbsp;·&nbsp; Responds same day</div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- FOOTER -->
+<div class="footer">
+  Jason Kaczmarski &nbsp;•&nbsp; RE/MAX 1st Choice &nbsp;•&nbsp;
+  <a href="tel:6155877888">615-587-7888</a>
+  <div class="disclaimer">
+    Data sourced from Realtracs MLS. Information believed to be accurate but not guaranteed. © 2026 Realtracs, Inc.
+    All figures represent closed residential single-family sales in Lebanon, TN as reported. Report prepared by Jason Kaczmarski, RE/MAX 1st Choice. Prepared for the Anderson Family.
+  </div>
+</div>
+
+<script>
+const years = ['2020','2021','2022','2024'];
+
+// Fairways data (null for years with no sales — 2023, 2025 excluded from line)
+const fwMedian  = [306000, 447500, 499900, 495000];
+const fwPPSF    = [125.08, 156.00, 203.64, 183.01];
+const fwDOM     = [83, 23, 28, 48];
+const fwVolume  = [3, 4, 5, 3];
+
+// River Oaks data
+const roMedian  = [422807, 443915, 555780, 579263, 677450];
+const roPPSF    = [165.60, 177.66, 224.97, 222.12, 222.63];
+const roDOM     = [21, 13, 8, 12, 25];
+const roVolume  = [31, 62, 15, 44, 16];
+const roYears   = ['2020','2021','2022','2023','2024'];
+
+const chartConfigs = {
+  price: {
+    labels: roYears,
+    datasets: [
+      {
+        label: 'Fairways Median',
+        data: [306000, 447500, 499900, null, 495000],
+        borderColor: '#1f4fa3',
+        backgroundColor: 'rgba(31,79,163,0.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#1f4fa3',
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        fill: false,
+        tension: 0.35,
+        spanGaps: false
+      },
+      {
+        label: 'River Oaks Median',
+        data: roMedian,
+        borderColor: '#d81f26',
+        backgroundColor: 'rgba(216,31,38,0.06)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#d81f26',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        fill: false,
+        tension: 0.35
+      }
+    ],
+    yFormat: v => v ? '$'+(v>=1000000?(v/1000000).toFixed(2)+'M':(v/1000).toFixed(0)+'K') : '',
+    tooltipFormat: v => '$'+Math.round(v).toLocaleString()
+  },
+  ppsf: {
+    labels: roYears,
+    datasets: [
+      {
+        label: 'Fairways Avg $/SF',
+        data: [125.08, 156.00, 203.64, null, 183.01],
+        borderColor: '#1f4fa3',
+        backgroundColor: 'rgba(31,79,163,0.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#1f4fa3',
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        fill: false,
+        tension: 0.35,
+        spanGaps: false
+      },
+      {
+        label: 'River Oaks Avg $/SF',
+        data: roPPSF,
+        borderColor: '#d81f26',
+        backgroundColor: 'rgba(216,31,38,0.06)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#d81f26',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        fill: false,
+        tension: 0.35
+      }
+    ],
+    yFormat: v => v ? '$'+v.toFixed(0) : '',
+    tooltipFormat: v => '$'+v.toFixed(2)+'/sf'
+  },
+  dom: {
+    labels: roYears,
+    datasets: [
+      {
+        label: 'Fairways Avg DOM',
+        data: [83, 23, 28, null, 48],
+        borderColor: '#1f4fa3',
+        backgroundColor: 'rgba(31,79,163,0.08)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#1f4fa3',
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        fill: false,
+        tension: 0.35,
+        spanGaps: false,
+        borderDash: [5,3]
+      },
+      {
+        label: 'River Oaks Avg DOM',
+        data: roDOM,
+        borderColor: '#d81f26',
+        backgroundColor: 'rgba(216,31,38,0.06)',
+        borderWidth: 2.5,
+        pointBackgroundColor: '#d81f26',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        fill: false,
+        tension: 0.35
+      }
+    ],
+    yFormat: v => v+' days',
+    tooltipFormat: v => v+' days'
+  },
+  volume: {
+    labels: roYears,
+    datasets: [
+      {
+        label: 'Fairways Sales',
+        data: [3, 4, 5, 0, 3],
+        backgroundColor: 'rgba(31,79,163,0.75)',
+        borderColor: '#1f4fa3',
+        borderWidth: 2,
+        borderRadius: 5,
+        type: 'bar'
+      },
+      {
+        label: 'River Oaks Sales',
+        data: roVolume,
+        backgroundColor: 'rgba(216,31,38,0.65)',
+        borderColor: '#d81f26',
+        borderWidth: 2,
+        borderRadius: 5,
+        type: 'bar'
+      }
+    ],
+    yFormat: v => v,
+    tooltipFormat: v => v+' sales'
+  }
+};
+
+let currentChart = null;
+
+function buildChart(type) {
+  if (currentChart) currentChart.destroy();
+  const cfg = chartConfigs[type];
+  const ctx = document.getElementById('mainChart').getContext('2d');
+  currentChart = new Chart(ctx, {
+    type: type === 'volume' ? 'bar' : 'line',
+    data: { labels: cfg.labels, datasets: cfg.datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'top', align: 'end',
+          labels: { font: { family: "'DM Sans',sans-serif", size: 12 }, color: '#64748b', usePointStyle: true, pointStyleWidth: 10, padding: 20 }
+        },
+        tooltip: {
+          backgroundColor: '#1a1a2e', titleColor: '#f0b429', bodyColor: 'white',
+          padding: 12, cornerRadius: 8,
+          titleFont: { family: "'DM Sans',sans-serif", weight: '600' },
+          bodyFont: { family: "'DM Sans',sans-serif" },
+          callbacks: {
+            label: ctx => ctx.parsed.y !== null ? ' '+ctx.dataset.label+': '+cfg.tooltipFormat(ctx.parsed.y) : ' Fairways: No sales'
+          }
+        }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { family: "'DM Sans',sans-serif", size: 12 }, color: '#64748b' } },
+        y: { grid: { color: 'rgba(0,0,0,.05)' }, ticks: { font: { family: "'DM Sans',sans-serif", size: 11 }, color: '#64748b', callback: v => cfg.yFormat(v) } }
+      }
+    }
+  });
+}
+
+function switchChart(type, e) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  buildChart(type);
+}
+
+function showYear(year, e) {
+  document.querySelectorAll('.year-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.year-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-'+year).classList.add('active');
+  e.currentTarget.classList.add('active');
+}
+
+window.addEventListener('load', () => buildChart('price'));
+</script>
+</body>
+</html>
